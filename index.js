@@ -1,13 +1,15 @@
 let taskId = 0;
-
+//localStorage.clear();
 let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 // retrieve existing list of task from LocalStorage
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
+console.log(localStorage.getItem("todoList"));
 
-/*
 // Retrieve todoList and display it
 todoList = JSON.parse(localStorage.getItem('todoList'));
-
+// ##############################################################
+// this create new tasks when refreshed but buttons dont work
+// 
 if (todoList) {
   // iterate over todoList and create element to display task
   for (let i = 0; i < todoList.length; i++) {
@@ -15,8 +17,38 @@ if (todoList) {
     let taskName = todoList[i].task
     let isCompleted = todoList[i].completed
     
+    // create tasks
+    const listElement = document.createElement('li');
+    listElement.setAttribute('id', taskId);
+
+    const inputElement = document.createElement('input');
+    inputElement.type = "checkbox";
+    listElement.appendChild(inputElement);
+    inputElement.checked = isCompleted;
+
+    const spanElement = document.createElement('span');
+    spanElement.contentEditable = true;
+    spanElement.classList.add('editable');
+    spanElement.textContent = taskName;
+
+    listElement.appendChild(spanElement);
+
+    const deleteElement = document.createElement('button');
+    deleteElement.classList.add('delete-buttons')
+    const delText = document.createTextNode("Delete");
+    deleteElement.appendChild(delText);
+
+    listElement.appendChild(deleteElement);
+    console.log(isCompleted)
+    if (isCompleted === true) {
+      spanElement.style.textDecoration = 'line-through';
+    } else {
+      spanElement.style.textDecoration = 'none';
+    }
+
+    document.getElementById('tasks-list').appendChild(listElement);
   }
-}*/
+};
 
 document.getElementById('form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -28,13 +60,14 @@ document.getElementById('form').addEventListener('submit', (e) => {
   // create li to store checkbox in
   const li = document.createElement('li');
   li.setAttribute('id', lastTaskID);
+
   // create new input element of type checkbox
   const newTask = document.createElement('input');
   newTask.type = "checkbox";
 
   li.appendChild(newTask);
 
-  // add li item to span class
+  // add span element to li
   const span = document.createElement('span');
   span.contentEditable = true;
   span.classList.add('editable');
@@ -66,6 +99,7 @@ document.getElementById('form').addEventListener('submit', (e) => {
     let updatedTasks = todoList.filter(task => task.taskId !== wantedTaskID);
     console.log(updatedTasks);
     localStorage.setItem('todoList', JSON.stringify(updatedTasks));
+    console.log(localStorage.getItem("todoList"));
   })
 
   // listens for checkbox and strikes through the item
@@ -93,16 +127,20 @@ document.getElementById('form').addEventListener('submit', (e) => {
     completed: false
   };
   
+  // get latest todoList
+  todoList = JSON.parse(localStorage.getItem('todoList')) || [];
+
   // append new task to task list
   todoList.push(task);
 
   // convert task object to JSON string
   let tasksString = JSON.stringify(todoList);
+  console.log(tasksString);
 
   // store lastTaskID and new task
   localStorage.setItem('lastTaskID', lastTaskID);
   localStorage.setItem("todoList", tasksString);
-
+  console.log(localStorage.getItem("todoList"));
 });
 
 
