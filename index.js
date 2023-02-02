@@ -77,7 +77,9 @@ taskList.addEventListener('click', function(event) {
   if (event.target.matches('input[type="checkbox"]')) {
     //event.target.checked = !event.target.checked;
     const span = parent.querySelector('span');
-    console.log(event.target.checked)
+    console.log(event.target.checked);
+    if (event.target.checked!=true)
+      event.target.click();
     if (span.style.textDecoration == 'line-through') {
       span.style.textDecoration = 'none';
     } else {
