@@ -50,14 +50,32 @@ if (todoList) {
   }
 };
 // add event listenrs to task lists for retrieved tasks
+/*
+const taskList = document.getElementById("tasks-list");
+taskList.addEventListener('change', function(event) {
+  event.preventDefault();
+  console.log("cchanged");
+  let parent = event.target.parentElement;
+  
+  if (event.target.type === 'checkbox') {
+    //event.target.checked = !event.target.checked;
+    const span = parent.querySelector('span');
+    console.log(event.target.checked);
+    if (span.style.textDecoration == 'line-through') {
+      span.style.textDecoration = 'none';
+    } else {
+      span.style.textDecoration = 'line-through';
+    };
+  }
+});*/
 const taskList = document.getElementById("tasks-list");
 taskList.addEventListener('click', function(event) {
   event.preventDefault();
+  console.log("clicked");
   let parent = event.target.parentElement;
   if (event.target.matches('.delete-buttons')) {
-    
+    console.log("dbutton");
     parent.remove();
-
     // get latest todolist
     let wantedTaskID = parseInt(event.target.parentElement.getAttribute('id'));
     todoList = JSON.parse(localStorage.getItem('todoList')) || [];
@@ -68,28 +86,20 @@ taskList.addEventListener('click', function(event) {
     localStorage.setItem('todoList', JSON.stringify(updatedTasks));
     console.log(localStorage.getItem("todoList"));
   } 
-  
-});
-
-taskList.addEventListener('click', function(event) {
-  event.preventDefault();
-  let parent = event.target.parentElement;
-  if (event.target.matches('input[type="checkbox"]')) {
-    //event.target.checked = !event.target.checked;
-    const span = parent.querySelector('span');
-    console.log(event.target.checked);
-    if (event.target.checked!=true)
-      event.target.click();
-    if (span.style.textDecoration == 'line-through') {
-      span.style.textDecoration = 'none';
-    } else {
-      span.style.textDecoration = 'line-through';
-    };
+  if (event.target.type === 'checkbox') {
+    console.log("checkbox");
+    parent.remove();
+    // get latest todolist
+    let wantedTaskID = parseInt(event.target.parentElement.getAttribute('id'));
+    todoList = JSON.parse(localStorage.getItem('todoList')) || [];
+    
+    // delete from localStorage
+    let updatedTasks = todoList.filter(task => task.taskId !== wantedTaskID);
+    console.log(updatedTasks);
+    localStorage.setItem('todoList', JSON.stringify(updatedTasks));
+    console.log(localStorage.getItem("todoList"));
   }
 });
-
-
-
 
 document.getElementById('form').addEventListener('submit', (e) => {
   e.preventDefault();
@@ -125,7 +135,7 @@ document.getElementById('form').addEventListener('submit', (e) => {
   deleteButton.appendChild(deleteText);
 
   li.appendChild(deleteButton);
-  
+  /*
   // deletes li from which delete button is clicked
   deleteButton.addEventListener('click', (e) => {
     e.preventDefault();
@@ -142,20 +152,10 @@ document.getElementById('form').addEventListener('submit', (e) => {
     localStorage.setItem('todoList', JSON.stringify(updatedTasks));
     console.log(localStorage.getItem("todoList"));
   })
-
+*/
   // listens for checkbox and strikes through the item
   console.log(newTask);
   console.log(newTask.parentElement);
-  /*
-  newTask.addEventListener('input', (e) => {
-    e.preventDefault();
-    console.log("TICKED");
-    if (newTask.checked) {
-      span.style.textDecoration = 'line-through';
-    } else {
-      span.style.textDecoration = 'none';
-    };
-  });*/
 
   // add checkbox wrapped by li to ul
   document.getElementById('tasks-list').appendChild(li);
