@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Todo List",
+  "description": "New tab todo list extension",
+  "version": "1.0",
+  "permissions": [
+    "tabs"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  }
+}
