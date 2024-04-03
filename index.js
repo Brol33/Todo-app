@@ -1,15 +1,13 @@
 let taskId = 0;
-//localStorage.clear();
 let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
+
 // retrieve existing list of task from LocalStorage
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
 console.log(localStorage.getItem("todoList"));
 
 // Retrieve todoList and display it
 todoList = JSON.parse(localStorage.getItem('todoList'));
-// ##############################################################
-// this create new tasks when refreshed but buttons dont work
-// 
+
 if (todoList) {
   // iterate over todoList and create element to display task
   for (let i = 0; i < todoList.length; i++) {
@@ -49,32 +47,13 @@ if (todoList) {
     document.getElementById('tasks-list').appendChild(listElement);
   }
 };
-// add event listenrs to task lists for retrieved tasks
-/*
-const taskList = document.getElementById("tasks-list");
-taskList.addEventListener('change', function(event) {
-  event.preventDefault();
-  console.log("cchanged");
-  let parent = event.target.parentElement;
-  
-  if (event.target.type === 'checkbox') {
-    //event.target.checked = !event.target.checked;
-    const span = parent.querySelector('span');
-    console.log(event.target.checked);
-    if (span.style.textDecoration == 'line-through') {
-      span.style.textDecoration = 'none';
-    } else {
-      span.style.textDecoration = 'line-through';
-    };
-  }
-});*/
+
+// add event listeners to task lists 
 const taskList = document.getElementById("tasks-list");
 taskList.addEventListener('click', function(event) {
-  event.preventDefault();
-  console.log("clicked");
+  //event.preventDefault();
   let parent = event.target.parentElement;
   if (event.target.matches('.delete-buttons')) {
-    console.log("dbutton");
     parent.remove();
     // get latest todolist
     let wantedTaskID = parseInt(event.target.parentElement.getAttribute('id'));
@@ -82,22 +61,42 @@ taskList.addEventListener('click', function(event) {
     
     // delete from localStorage
     let updatedTasks = todoList.filter(task => task.taskId !== wantedTaskID);
-    console.log(updatedTasks);
     localStorage.setItem('todoList', JSON.stringify(updatedTasks));
-    console.log(localStorage.getItem("todoList"));
   } 
+  
+  // listens for checkbox and strikes through the item
   if (event.target.type === 'checkbox') {
-    console.log("checkbox");
-    parent.remove();
-    // get latest todolist
-    let wantedTaskID = parseInt(event.target.parentElement.getAttribute('id'));
+    let span = parent.querySelector('span');
+
+    // get current task and toggle the completed property 
+    let wantedTaskID = parseInt(parent.getAttribute('id'));
     todoList = JSON.parse(localStorage.getItem('todoList')) || [];
-    
-    // delete from localStorage
-    let updatedTasks = todoList.filter(task => task.taskId !== wantedTaskID);
-    console.log(updatedTasks);
-    localStorage.setItem('todoList', JSON.stringify(updatedTasks));
-    console.log(localStorage.getItem("todoList"));
+    let taskIndex = todoList.findIndex(task => task.taskId === wantedTaskID);
+    todoList[taskIndex].completed = !todoList[taskIndex].completed;
+
+    // update local storage with updated todolist
+    localStorage.setItem('todoList', JSON.stringify(todoList));
+
+    if (todoList[taskIndex].completed) {
+      span.style.textDecoration = 'line-through';
+    } else {
+      span.style.textDecoration = 'none';
+    }
+  }
+});
+
+// Updating edited tasks
+taskList.addEventListener("blur", function(event) {
+  if (event.target.matches("span.editable")) {
+    // get taskId from parent element
+    let taskId = parseInt(event.target.parentElement.getAttribute("id"))
+    // find index of task object in the todoList array
+    let taskIndex = todoList.findIndex(task => task.taskId === taskId);
+    // update task description in todoList array
+    todoList[taskIndex].task = event.target.textContent;
+    // update storage
+    localStorage.setItem("todoList", JSON.stringify(todoList));
+    console.log("updated todolist", todoList);
   }
 });
 
@@ -106,7 +105,6 @@ document.getElementById('form').addEventListener('submit', (e) => {
 
   // get input of task from suer
   const input = document.getElementById('new-task').value;
-  console.log(input)
 
   // create li to store checkbox in
   const li = document.createElement('li');
@@ -135,27 +133,6 @@ document.getElementById('form').addEventListener('submit', (e) => {
   deleteButton.appendChild(deleteText);
 
   li.appendChild(deleteButton);
-  /*
-  // deletes li from which delete button is clicked
-  deleteButton.addEventListener('click', (e) => {
-    e.preventDefault();
-    console.log("deteletetetete");
-    li.remove();
-    let wantedTaskID = parseInt(li.getAttribute('id'));
-
-    // get latest todolist
-    todoList = JSON.parse(localStorage.getItem('todoList')) || [];
-    
-    // delete from localStorage
-    let updatedTasks = todoList.filter(task => task.taskId !== wantedTaskID);
-    console.log(updatedTasks);
-    localStorage.setItem('todoList', JSON.stringify(updatedTasks));
-    console.log(localStorage.getItem("todoList"));
-  })
-*/
-  // listens for checkbox and strikes through the item
-  console.log(newTask);
-  console.log(newTask.parentElement);
 
   // add checkbox wrapped by li to ul
   document.getElementById('tasks-list').appendChild(li);
@@ -179,12 +156,10 @@ document.getElementById('form').addEventListener('submit', (e) => {
 
   // convert task object to JSON string
   let tasksString = JSON.stringify(todoList);
-  console.log(tasksString);
 
   // store lastTaskID and new task
   localStorage.setItem('lastTaskID', lastTaskID);
   localStorage.setItem("todoList", tasksString);
-  console.log(localStorage.getItem("todoList"));
 });
 
 
