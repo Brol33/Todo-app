@@ -51,7 +51,7 @@ if (todoList) {
 // add event listeners to task lists 
 const taskList = document.getElementById("tasks-list");
 taskList.addEventListener('click', function(event) {
-  //event.preventDefault();
+  // Deletes tasks when delete button is clicked
   let parent = event.target.parentElement;
   if (event.target.matches('.delete-buttons')) {
     parent.remove();
@@ -86,7 +86,7 @@ taskList.addEventListener('click', function(event) {
 });
 
 // Updating edited tasks
-taskList.addEventListener("blur", function(event) {
+taskList.addEventListener("input", function(event) {
   if (event.target.matches("span.editable")) {
     // get taskId from parent element
     let taskId = parseInt(event.target.parentElement.getAttribute("id"))
@@ -96,13 +96,11 @@ taskList.addEventListener("blur", function(event) {
     todoList[taskIndex].task = event.target.textContent;
     // update storage
     localStorage.setItem("todoList", JSON.stringify(todoList));
-    console.log("updated todolist", todoList);
   }
 });
 
 document.getElementById('form').addEventListener('submit', (e) => {
-  e.preventDefault();
-
+  //e.preventDefault();
   // get input of task from suer
   const input = document.getElementById('new-task').value;
 
