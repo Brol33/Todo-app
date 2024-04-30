@@ -1,3 +1,47 @@
+// timer implementation
+let interval;
+let timer;
+let remainingTime;
+
+// duration in minutes
+function startTimer(duration, display) {
+  // convert minutes to seconds
+  timer = duration * 60
+  interval = setInterval(function() {
+    // calculate minutes and seconds
+    let minutes = parseInt( timer / 60, 10);
+    let seconds = timer % 60
+
+    // adding leading zeroes
+    minutes = minutes < 10 ? "0" + minutes : minutes
+    seconds = seconds < 10 ? "0" + seconds : seconds
+
+    // update display
+    display.textContent = minutes + ":" + seconds;
+
+    // decrement timer by 1 second and stop
+    if (timer-- < 0) {
+      clearInterval(interval);
+    }
+  }, 1000);
+
+}
+
+// Stops timer and stores duration left
+function pauseTimer() {
+  clearInterval(interval);
+  remainingTime = timer / 60;
+}
+
+function resumeTimer() {
+  startTimer(remainingTime, display);
+}
+
+function resetTimer() {
+  clearInterval(interval);
+  startTimer(timer, display);
+}
+
 let taskId = 0;
 let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 
@@ -5,6 +49,9 @@ let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
 console.log(localStorage.getItem("todoList"));
 
+document.addEventListener('DOMContentLoaded', function() {
+  // Code to retrieve tasks from local storage and display them
+});
 // Retrieve todoList and display it
 todoList = JSON.parse(localStorage.getItem('todoList'));
 
@@ -104,8 +151,7 @@ const form = document.getElementById("form");
 if (form) {
   form.addEventListener('submit', (e) => {
     e.preventDefault();
-    console.log("SUBMITTED")
-    // get input of task from suer
+    // get input of task from user
     const input = document.getElementById('new-task').value;
   
     // create li to store checkbox in
@@ -165,8 +211,7 @@ if (form) {
   });
 }
 
-
-
+document.getElementById("start-button").addEventListener("click", startTimer())
 
 
 
