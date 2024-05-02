@@ -3,13 +3,17 @@ let interval;
 let timer;
 let remainingTime;
 
-// duration in minutes
+// duration in seconds
 function startTimer(duration, display) {
+  if (interval) {
+    console.log("timer is already running");
+    return;
+  }
   // convert minutes to seconds
-  timer = duration * 60
+  timer = duration
   interval = setInterval(function() {
     // calculate minutes and seconds
-    let minutes = parseInt( timer / 60, 10);
+    let minutes = Math.floor(timer / 60);
     let seconds = timer % 60
 
     // adding leading zeroes
@@ -30,16 +34,12 @@ function startTimer(duration, display) {
 // Stops timer and stores duration left
 function pauseTimer() {
   clearInterval(interval);
-  remainingTime = timer / 60;
+  remainingTime = timer;
 }
 
-function resumeTimer() {
-  startTimer(remainingTime, display);
-}
-
-function resetTimer() {
+function resetTimer(defaultDuration) {
   clearInterval(interval);
-  startTimer(timer, display);
+  startTimer(defaultDuration, display);
 }
 
 let taskId = 0;
@@ -49,9 +49,7 @@ let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
 console.log(localStorage.getItem("todoList"));
 
-document.addEventListener('DOMContentLoaded', function() {
-  // Code to retrieve tasks from local storage and display them
-});
+
 // Retrieve todoList and display it
 todoList = JSON.parse(localStorage.getItem('todoList'));
 
@@ -211,8 +209,19 @@ if (form) {
   });
 }
 
-document.getElementById("start-button").addEventListener("click", startTimer())
+// implementation of timer and buttons
 
+
+
+document.getElementById("start-button").addEventListener("click", function() {
+  const timerStringDiv = document.getElementById("timer-string");
+  const timerString = timerStringDiv.textContent;
+  const minutesSeconds = timerString.split(":")
+  const duration = parseInt(minutesSeconds[0]) * 60 + parseInt(minutesSeconds[1]);
+  startTimer(duration, timerStringDiv)
+})
+document.getElementById("pause-button").addEventListener("click", pauseTimer)
+document.getElementById("reset-button").addEventListener("click", resetTimer)
 
 
 

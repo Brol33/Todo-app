@@ -120,17 +120,3 @@ describe('Todo List Chrome Extension', () => {
     })
   })
 })
-
-describe('Test data persistence from local storage', () => {
-  beforeEach(() => {
-    // load fixture into local storage
-  })
-
-  it('should display tasks from local storage', () => {
-      
-  })
-
-  it('should persist new task after reload', () => {
-      
-  })
-})

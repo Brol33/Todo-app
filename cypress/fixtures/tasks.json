@@ -1,0 +1,7 @@
+{
+  "todoList": [
+    { "taskId": 1, "task": "Task 1", "completed": true },
+    { "taskId": 2, "task": "create fixture", "completed": false },
+    { "taskId": 3, "task": "test persistence", "completed": false }
+  ]
+}
