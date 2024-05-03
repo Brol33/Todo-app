@@ -2,11 +2,13 @@
 let interval;
 let timer;
 let remainingTime;
+var currentTimerDuration;
 
 // duration in seconds
 function startTimer(duration, display) {
   if (interval) {
     console.log("timer is already running");
+    console.log(interval)
     return;
   }
   // convert minutes to seconds
@@ -31,9 +33,10 @@ function startTimer(duration, display) {
 
 }
 
-// Stops timer and stores duration left
+// Stops timer, stores duration left and resets interval
 function pauseTimer() {
   clearInterval(interval);
+  interval = null
   remainingTime = timer;
 }
 
@@ -211,8 +214,6 @@ if (form) {
 
 // implementation of timer and buttons
 
-
-
 document.getElementById("start-button").addEventListener("click", function() {
   const timerStringDiv = document.getElementById("timer-string");
   const timerString = timerStringDiv.textContent;
@@ -222,6 +223,21 @@ document.getElementById("start-button").addEventListener("click", function() {
 })
 document.getElementById("pause-button").addEventListener("click", pauseTimer)
 document.getElementById("reset-button").addEventListener("click", resetTimer)
+document.getElementById("save-button").addEventListener("click", function() {
+  // timerInput in minutes, convert to seconds
+  var timerInput = document.getElementById("timer-input").value;
+  var durationInSeconds = parseInt(timerInput, 10) * 60
+  // calculate minutes and seconds
+  let minutes = Math.floor(durationInSeconds / 60);
+  let seconds = durationInSeconds % 60
+
+  // adding leading zeroes
+  minutes = minutes < 10 ? "0" + minutes : minutes
+  seconds = seconds < 10 ? "0" + seconds : seconds
+
+  // update display
+  document.getElementById("timer-string").textContent = minutes + ":" + seconds;
+})
 
 // Setting button implementation
 var modal = document.getElementById("settings-modal")
