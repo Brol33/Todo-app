@@ -223,6 +223,25 @@ document.getElementById("start-button").addEventListener("click", function() {
 document.getElementById("pause-button").addEventListener("click", pauseTimer)
 document.getElementById("reset-button").addEventListener("click", resetTimer)
 
+// Setting button implementation
+var modal = document.getElementById("settings-modal")
+var settingsBtn = document.getElementById("setting-button")
+var saveBtn = document.getElementById('save-button')
+
+settingsBtn.onclick = function() {
+  modal.style.display = "block";
+}
+
+saveBtn.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
 
 
 
