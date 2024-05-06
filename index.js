@@ -9,7 +9,7 @@ function startTimer(duration, display) {
   // duration in seconds
   if (interval) {
     console.log("timer is already running");
-    console.log(interval)
+    console.log(interval);
     return;
   }
   // convert minutes to seconds
@@ -28,6 +28,7 @@ function startTimer(duration, display) {
 
     // decrement timer by 1 second and stop
     if (timer-- < 0) {
+      playTimerSound();
       clearInterval(interval);
     }
   }, 1000);
@@ -37,17 +38,21 @@ function startTimer(duration, display) {
 // Stops timer, stores duration left and resets interval
 function pauseTimer() {
   clearInterval(interval);
-  interval = null
+  interval = null;
   remainingTime = timer;
 }
 
 // Stops current timer and starts timer again
 function resetTimer(duration, display) {
   clearInterval(interval);
-  interval = null
+  interval = null;
   startTimer(duration, display)
 }
 
+function playTimerSound() {
+  const audio = new Audio('audio/Alarm04.wav');
+  audio.play();
+}
 // To-do List implementation
 let taskId = 0;
 let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
@@ -62,9 +67,9 @@ todoList = JSON.parse(localStorage.getItem('todoList'));
 // iterate over todoList and create element to display task
 if (todoList) {
   for (let i = 0; i < todoList.length; i++) {
-    let currentTaskId = todoList[i].taskId
-    let taskName = todoList[i].task
-    let isCompleted = todoList[i].completed
+    let currentTaskId = todoList[i].taskId;
+    let taskName = todoList[i].task;
+    let isCompleted = todoList[i].completed;
     
     // create tasks
     const listElement = document.createElement('li');
@@ -83,7 +88,7 @@ if (todoList) {
     listElement.appendChild(spanElement);
 
     const deleteElement = document.createElement('button');
-    deleteElement.classList.add('delete-buttons')
+    deleteElement.classList.add('delete-buttons');
     const delText = document.createTextNode("Delete");
     deleteElement.appendChild(delText);
 
@@ -140,7 +145,7 @@ if (taskList) {
   taskList.addEventListener("input", function(event) {
     if (event.target.matches("span.editable")) {
       // get taskId from parent element
-      let curTaskId = parseInt(event.target.parentElement.getAttribute("id"))
+      let curTaskId = parseInt(event.target.parentElement.getAttribute("id"));
       // find index of task object in the todoList array
       let taskIndex = todoList.findIndex(task => task.taskId === curTaskId);
       // update task description in todoList array
@@ -180,7 +185,7 @@ if (form) {
     // create delete button
     const deleteButton = document.createElement('button');
     // add delete button to class delete-buttons
-    deleteButton.classList.add('delete-buttons')
+    deleteButton.classList.add('delete-buttons');
     const deleteText = document.createTextNode("Delete");
   
     deleteButton.appendChild(deleteText);
@@ -221,42 +226,42 @@ let timerStringDiv = document.getElementById("timer-string");
 
 document.getElementById("start-button").addEventListener("click", function() {
   const timerString = timerStringDiv.textContent;
-  const minutesSeconds = timerString.split(":")
+  const minutesSeconds = timerString.split(":");
   const duration = parseInt(minutesSeconds[0]) * 60 + parseInt(minutesSeconds[1]);
-  startTimer(duration, timerStringDiv)
+  startTimer(duration, timerStringDiv);
 })
-document.getElementById("pause-button").addEventListener("click", pauseTimer)
+document.getElementById("pause-button").addEventListener("click", pauseTimer);
 document.getElementById("reset-button").addEventListener("click", function() {
   resetTimer(currentDuration, timerStringDiv);
 })
 document.getElementById("setting-form").addEventListener("submit", function(e) {
   // prevent page reload
-  e.preventDefault()
+  e.preventDefault();
   // Check if input is valid int
   var timerInput = document.getElementById("timer-input").value;
   if (isNaN(parseInt(timerInput))) {
-    alert("Please enter a duration in minutes")
+    alert("Please enter a duration in minutes");
     return;
   }
   // timerInput in minutes, convert to seconds
-  currentDuration = parseInt(timerInput, 10) * 60
-  var updatedDuration = parseInt(timerInput, 10) * 60
+  currentDuration = parseInt(timerInput, 10) * 60;
+  var updatedDuration = parseInt(timerInput, 10) * 60;
   // calculate minutes and seconds
   let minutes = Math.floor(updatedDuration / 60);
-  let seconds = updatedDuration % 60
+  let seconds = updatedDuration % 60;
 
   // adding leading zeroes
-  minutes = minutes < 10 ? "0" + minutes : minutes
-  seconds = seconds < 10 ? "0" + seconds : seconds
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
 
   // update display
   document.getElementById("timer-string").textContent = minutes + ":" + seconds;
 })
 
 // Setting buttons implementation
-var modal = document.getElementById("settings-modal")
-var settingsBtn = document.getElementById("setting-button")
-var saveBtn = document.getElementById('save-button')
+var modal = document.getElementById("settings-modal");
+var settingsBtn = document.getElementById("setting-button");
+var saveBtn = document.getElementById('save-button');
 
 settingsBtn.onclick = function() {
   modal.style.display = "block";
