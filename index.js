@@ -2,10 +2,11 @@
 let interval;
 let timer;
 let remainingTime;
-var currentTimerDuration;
+var currentDuration = 3000;
 
-// duration in seconds
+// Timer Functions
 function startTimer(duration, display) {
+  // duration in seconds
   if (interval) {
     console.log("timer is already running");
     console.log(interval)
@@ -40,11 +41,14 @@ function pauseTimer() {
   remainingTime = timer;
 }
 
-function resetTimer(defaultDuration) {
+// Stops current timer and starts timer again
+function resetTimer(duration, display) {
   clearInterval(interval);
-  startTimer(defaultDuration, display);
+  interval = null
+  startTimer(duration, display)
 }
 
+// To-do List implementation
 let taskId = 0;
 let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 
@@ -52,12 +56,11 @@ let lastTaskID = parseInt(localStorage.getItem('lastTaskID')) || 0;
 let todoList = JSON.parse(localStorage.getItem('todoList')) || [];
 console.log(localStorage.getItem("todoList"));
 
-
 // Retrieve todoList and display it
 todoList = JSON.parse(localStorage.getItem('todoList'));
 
+// iterate over todoList and create element to display task
 if (todoList) {
-  // iterate over todoList and create element to display task
   for (let i = 0; i < todoList.length; i++) {
     let currentTaskId = todoList[i].taskId
     let taskName = todoList[i].task
@@ -95,7 +98,7 @@ if (todoList) {
   }
 };
 
-
+// Implementation of delete, edit and check
 const taskList = document.getElementById("tasks-list");
 if (taskList) {
   // add event listeners to task lists 
@@ -148,6 +151,7 @@ if (taskList) {
   });
 }
 
+// Implementation of adding new task
 const form = document.getElementById("form");
 if (form) {
   form.addEventListener('submit', (e) => {
@@ -212,24 +216,34 @@ if (form) {
   });
 }
 
-// implementation of timer and buttons
+// Implementation of timer and buttons
+let timerStringDiv = document.getElementById("timer-string");
 
 document.getElementById("start-button").addEventListener("click", function() {
-  const timerStringDiv = document.getElementById("timer-string");
   const timerString = timerStringDiv.textContent;
   const minutesSeconds = timerString.split(":")
   const duration = parseInt(minutesSeconds[0]) * 60 + parseInt(minutesSeconds[1]);
   startTimer(duration, timerStringDiv)
 })
 document.getElementById("pause-button").addEventListener("click", pauseTimer)
-document.getElementById("reset-button").addEventListener("click", resetTimer)
-document.getElementById("save-button").addEventListener("click", function() {
-  // timerInput in minutes, convert to seconds
+document.getElementById("reset-button").addEventListener("click", function() {
+  resetTimer(currentDuration, timerStringDiv);
+})
+document.getElementById("setting-form").addEventListener("submit", function(e) {
+  // prevent page reload
+  e.preventDefault()
+  // Check if input is valid int
   var timerInput = document.getElementById("timer-input").value;
-  var durationInSeconds = parseInt(timerInput, 10) * 60
+  if (isNaN(parseInt(timerInput))) {
+    alert("Please enter a duration in minutes")
+    return;
+  }
+  // timerInput in minutes, convert to seconds
+  currentDuration = parseInt(timerInput, 10) * 60
+  var updatedDuration = parseInt(timerInput, 10) * 60
   // calculate minutes and seconds
-  let minutes = Math.floor(durationInSeconds / 60);
-  let seconds = durationInSeconds % 60
+  let minutes = Math.floor(updatedDuration / 60);
+  let seconds = updatedDuration % 60
 
   // adding leading zeroes
   minutes = minutes < 10 ? "0" + minutes : minutes
@@ -239,7 +253,7 @@ document.getElementById("save-button").addEventListener("click", function() {
   document.getElementById("timer-string").textContent = minutes + ":" + seconds;
 })
 
-// Setting button implementation
+// Setting buttons implementation
 var modal = document.getElementById("settings-modal")
 var settingsBtn = document.getElementById("setting-button")
 var saveBtn = document.getElementById('save-button')
@@ -257,15 +271,3 @@ window.onclick = function(event) {
     modal.style.display = "none";
   }
 }
-
-
-
-
-
-
-
-
-
-
-
-
