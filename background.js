@@ -1,4 +1,4 @@
-// timer implementation
+/*// timer implementation
 let interval;
 let timer;
 let remainingTime;
@@ -108,4 +108,42 @@ window.onclick = function(event) {
   if (event.target == modal) {
     modal.style.display = "none";
   }
+}*/
+
+// ref to setInterval
+let timerInterval;
+// time value in seconds
+let timerValue;
+
+// listen to messages
+chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+  switch(request.action) {
+    case "start":
+      startTimer(request.duration);
+      break;
+    case "pause":
+      clearInterval(timerInterval);
+      break;
+    case "reset":
+      clearInterval(timerInterval);
+      timerValue = 0;
+      sendResponse({ time: timerValue });
+      break;
+    case "getTime":
+      sendResponse({ time: timerValue });
+      break;
+  }
+}) 
+
+function startTimer(duration) {
+  let startTime = Date.now();
+  timerInterval = setInterval(function() {
+    // calculate duration left, convert ms to s
+    timerValue = duration - ((Date.now() - startTime) / 1000);
+    chrome.storage.local.set({ "timerValue": timerValue });
+    chrome.runtime.sendMessage({ action: "updateUI", time: timerValue});
+  }, 1000);
 }
+
+
+  
