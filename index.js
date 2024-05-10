@@ -165,3 +165,78 @@ if (form) {
     localStorage.setItem("todoList", tasksString);
   });
 }
+
+// Timer implementation
+var timerInput = 3000;
+
+function updateUI(time) {
+  document.getElementById("timer-display").textContent = formatTime(time);
+}
+function formatTime(seconds) {
+  let minutes = Math.floor(seconds / 60)
+  let sec = seconds % 60
+  minutes = minutes < 10 ? 0 + minutes : minutes;
+  sec = sec < 10 ? 0 + sec : sec;
+  return minutes + ":" + sec
+}
+
+document.getElementById("start-button").addEventListener("click", function() {
+  chrome.runtime.sendMessage({ action: "start", duration: timerInput});
+});
+
+document.getElementById("pause-button").addEventListener("click", function() {
+  chrome.runtime.sendMessage({ action: "pause"});
+});
+
+document.getElementById("reset-button").addEventListener("click", function() {
+  chrome.runtime.sendMessage({ action: "reset "}, function(response) {
+    updateUI(response.time)
+  })
+});
+//
+//
+// Implement settings now
+//
+//
+document.getElementById("setting-form").addEventListener("submit", function(e) {
+  // prevent page reload
+  e.preventDefault();
+  // Check if input is valid int
+  timerInput = document.getElementById("timer-input").value;
+  if (isNaN(parseInt(timerInput))) {
+    alert("Please enter a duration in minutes");
+    return;
+  }
+  // timerInput in minutes, convert to seconds
+  currentDuration = parseInt(timerInput, 10) * 60;
+  var updatedDuration = parseInt(timerInput, 10) * 60;
+  // calculate minutes and seconds
+  let minutes = Math.floor(updatedDuration / 60);
+  let seconds = updatedDuration % 60;
+
+  // adding leading zeroes
+  minutes = minutes < 10 ? "0" + minutes : minutes;
+  seconds = seconds < 10 ? "0" + seconds : seconds;
+
+  // update display
+  document.getElementById("timer-string").textContent = minutes + ":" + seconds;
+})
+
+// Setting buttons implementation
+var modal = document.getElementById("settings-modal");
+var settingsBtn = document.getElementById("setting-button");
+var saveBtn = document.getElementById('save-button');
+
+settingsBtn.onclick = function() {
+  modal.style.display = "block";
+}
+
+saveBtn.onclick = function() {
+  modal.style.display = "none";
+}
+
+window.onclick = function(event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
