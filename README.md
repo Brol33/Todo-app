@@ -8,4 +8,4 @@ Download the source and load as an unpacked extension.
 - Add and delete tasks
 - Mark tasks as completed
 
-[Snapshot](https://github.com/Brol33/Todo-app/blob/main/todolist.png?raw=true)
+[Snapshot](https://github.com/Brol33/Todo-app/blob/main/todolist.PNG?raw=true)
